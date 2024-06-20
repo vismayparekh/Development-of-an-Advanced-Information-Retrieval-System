@@ -1,0 +1,72 @@
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Multiple Term Search</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: 'Franklin Gothic Demi', sans-serif;
+            background-image: url('https://assets.awwwards.com/awards/element/2022/10/635fca4c13c11653424026.png');
+            background-size: cover;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            color: #333;
+        }
+        .form-container {
+            background: rgba(35, 0, 142, 0.9);
+            border-radius: 16px;
+            padding: 24px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            color: #FFF;
+            width: 100%;
+            max-width: 400px;
+            text-align: center;
+        }
+        input[type="text"], button {
+            background: #ccc;
+            color: #333;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 20px;
+            margin-bottom: 20px;
+            width: calc(100% - 44px);
+            cursor: pointer;
+            transition: background-color 0.4s ease;
+        }
+        button:hover {
+            background-color: #FF6464;
+        }
+        .button-container {
+            text-align: center;
+            margin-top: 20px;
+        }
+        .back-button {
+            background-color: #888;
+            margin-top: 5px;
+        }
+    </style>
+</head>
+<body>
+    <div class="form-container">
+        <h1>Multiple Term Search</h1>
+        <form method="post" action="{% url 'search_documents' %}" autocomplete="off">
+            {% csrf_token %}
+            <label for="query">Enter Multiple Terms (separated by '+'):</label>
+            <input type="text" id="query" name="query" autocomplete="off">
+            <div class="button-container">
+                <button type="submit">Search</button>
+            </div>
+        </form>
+        <div class="button-container">
+            <button onclick="history.back()" class="back-button">Go Back</button>
+        </div>
+    </div>
+</body>
+</html>

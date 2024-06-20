@@ -1,0 +1,92 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>View Document - {{ document_title }}</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            padding: 20px;
+            background-color: #f4f4f9;
+        }
+        mark {
+            padding: 0;
+        }
+        .highlight-legend {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: white;
+            border: 1px solid #ccc;
+            padding: 10px;
+            border-radius: 8px;
+            width: 200px;
+        }
+        .term-color {
+            display: flex;
+            align-items: center;
+            margin-bottom: 5px;
+        }
+        .color-box {
+            width: 20px;
+            height: 20px;
+            margin-right: 10px;
+        }
+    </style>
+</head>
+<body>
+    <h1>{{ document_title }}</h1>
+    <div id="documentContent" style="white-space: pre-wrap;">{{ document_text|safe }}</div>
+    <div class="highlight-legend" id="highlightLegend"></div>
+    <a href="{% url 'search_results' %}">Back to Search Results</a>
+
+    
+    <script>
+        const terms = {{ search_terms|safe }};
+        const contentDiv = document.getElementById('documentContent');
+        const legendDiv = document.getElementById('highlightLegend');
+
+        function escapeRegExp(string) {
+            return string.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+        }
+
+        function applyHighlighting() {
+            if (!contentDiv) return;
+            let innerHTML = contentDiv.innerHTML;
+            let foundTerms = []; // Array to track found terms
+
+            terms.forEach((term, index) => {
+                const color = `hsl(${index * 360 / terms.length}, 100%, 70%)`;
+                const regex = new RegExp(`(\\b${escapeRegExp(term)}\\b)`, 'gi');
+                if (innerHTML.search(regex) !== -1) { // Check if the term is found
+                    innerHTML = innerHTML.replace(regex, `<mark style="background-color:${color};">$1</mark>`);
+                    foundTerms.push({ term, color }); // Add to found terms
+                }
+            });
+
+            contentDiv.innerHTML = innerHTML;
+
+            
+            foundTerms.forEach(({ term, color }) => {
+                const colorBox = document.createElement('div');
+                colorBox.className = 'color-box';
+                colorBox.style.backgroundColor = color;
+
+                const termText = document.createElement('span');
+                termText.textContent = term;
+
+                const container = document.createElement('div');
+                container.className = 'term-color';
+                container.appendChild(colorBox);
+                container.appendChild(termText);
+
+                legendDiv.appendChild(container);
+            });
+        }
+
+        window.onload = applyHighlighting;
+    </script>
+</body>
+</html>

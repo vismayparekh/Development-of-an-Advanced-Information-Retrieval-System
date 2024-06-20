@@ -1,0 +1,68 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document Search Results</title>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:400,500&display=swap">
+    <style>
+        body {
+            font-family: 'Roboto', sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: #f4f4f9;
+        }
+        .result-container {
+            background-color: white;
+            border-radius: 10px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            margin: 10px 0;
+            padding: 20px;
+        }
+        h2 {
+            color: #333;
+            font-size: 18px;
+        }
+        p {
+            color: #666;
+            font-size: 16px;
+        }
+        a.button, .button {
+            text-decoration: none;
+            padding: 10px 15px;
+            background-color: #0056b3;
+            color: white;
+            border-radius: 20px;
+            display: inline-block;
+            margin-top: 10px;
+        }
+        a.button:hover, .button:hover {
+            background-color: #004494;
+        }
+        .word-positions {
+            margin-top: 5px;
+        }
+        .bottom-left-button {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+        }
+    </style>
+</head>
+<body>
+   
+    <button type="button" onclick="window.location.href='{% url 'search_documents' %}'" class="button top-left-button">Back to Search</button>
+
+    {% for doc_id, details in results.items %}
+        <div class="result-container">
+            <h2>{{ details.title }} (ID: {{ doc_id }})</h2>
+            {% for word, positions in details.positions.items %}
+                <p class="word-positions"><strong>{{ word }}:</strong> Positions found: {{ positions|join:", " }}</p>
+            {% endfor %}
+            
+            <a href="{% url 'view_document' doc_id=doc_id %}" class="button" target="_blank">View Document</a>
+        </div>
+    {% endfor %}
+</body>
+</html>
